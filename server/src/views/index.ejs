@@ -1,12 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ul,
+      .caret {
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .caret::before {
+        content: '\25B6';
+        color: black;
+        display: inline-block;
+        margin-right: 6px;
+      }
+
+      .caret-down::before {
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+
+      .nested {
+        display: none;
+      }
+
+      .active {
+        display: block;
+      }
+    </style>
   </head>
-  <body>
-    <h1><%= JSON.stringify(territoryData) %></h1>
+  <body class="p-12 bg-gray-50 dark:bg-gray-900 dark:text-white">
+    <h1 class="pl-8 text-3xl mb-4 font-bold">Territories</h1>
+    <p class="pl-8 mb-4 text-neutral-300">Here is the list of territories</p>
+    <div id="list"></div>
+    <button
+      type="button"
+      id="logout-btn"
+      class="ml-8 mt-4 py-2 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+    >
+      Logout
+    </button>
+
+    <script>
+      function decodeEntities(input) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = input;
+        return textarea.value;
+      }
+
+      const rawData = '<%= JSON.stringify(territoryData) %>';
+      const hierarchicalData = JSON.parse(decodeEntities(rawData));
+      console.log(hierarchicalData);
+
+      function generateHTMLTree(data, parentElement) {
+        const ul = document.createElement('ul');
+        ul.classList.add('list-none', 'pl-8');
+
+        data.forEach((node) => {
+          const li = document.createElement('li');
+          const span = document.createElement('span');
+          span.textContent = node.name;
+
+          li.appendChild(span);
+
+          if (!(node.children && node.children.length > 0)) {
+            li.classList.add('ms-4');
+          }
+
+          ul.appendChild(li);
+
+          if (node.children && node.children.length > 0) {
+            const nestedUl = generateHTMLTree(node.children, li);
+            nestedUl.classList.add('nested');
+            span.classList.add('caret');
+            li.appendChild(nestedUl);
+          }
+        });
+
+        parentElement.appendChild(ul);
+        return ul;
+      }
+
+      const rootElement = document.getElementById('list');
+      generateHTMLTree(hierarchicalData, rootElement);
+
+      const toggler = document.getElementsByClassName('caret');
+      for (let i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener('click', function () {
+          this.parentElement
+            .querySelector('.nested')
+            .classList.toggle('active');
+          this.classList.toggle('caret-down');
+        });
+      }
+
+      document
+        .getElementById('logout-btn')
+        .addEventListener('click', function () {
+          function deleteCookie(name) {
+            document.cookie =
+              name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          }
+
+          var cookies = document.cookie.split(';');
+
+          cookies.forEach(function (cookie) {
+            var cookiePair = cookie.split('=');
+            var cookieName = cookiePair[0].trim();
+
+            if (cookieName === 'token') {
+              deleteCookie('token');
+            }
+          });
+
+          window.location.href = '/account/login';
+        });
+    </script>
   </body>
 </html>
