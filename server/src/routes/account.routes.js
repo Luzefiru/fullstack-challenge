@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const accountController = require('../controllers/account.controller');
+const { accountController } = require('../controllers');
 
 router.get('/login', (req, res) => {
   if (req.user) {

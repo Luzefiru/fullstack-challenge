@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const { homeController } = require('./src/controllers');
 
 /* Middleware */
 app.use(express.static(path.join(__dirname, 'public')));
@@ -21,10 +22,12 @@ app.use((req, res, next) => {
 });
 
 /* Routes */
-const accountRouter = require('./src/routes/account.routes');
+const { homeRouter, accountRouter } = require('./src/routes');
 app.use('/account', accountRouter);
-app.get('/', authenticate, (req, res) => {
-  res.render('index', { territoryData: { test: req.user } });
+app.use('/home', authenticate, homeRouter);
+app.get('/', authenticate, async (_, res) => {
+  const territoryData = await homeController.getTerritoryData();
+  res.render('index', { territoryData });
 });
 
 /* Error Handlers */

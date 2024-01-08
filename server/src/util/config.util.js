@@ -6,4 +6,7 @@ module.exports = {
   SIGN_IN_URL:
     process.env.SIGN_IN_URL ||
     'https://netzwelt-devtest.azurewebsites.net/Account/SignIn',
+  TERRITORY_DATA_URL:
+    process.env.TERRITORY_DATA_URL ||
+    'https://netzwelt-devtest.azurewebsites.net/Territories/All',
 };
