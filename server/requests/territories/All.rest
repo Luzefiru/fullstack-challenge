@@ -1,0 +1,1 @@
+GET https://netzwelt-devtest.azurewebsites.net/Territories/All

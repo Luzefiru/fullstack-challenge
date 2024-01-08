@@ -1,0 +1,7 @@
+POST https://netzwelt-devtest.azurewebsites.net/Account/SignIn
+Content-Type: application/json
+
+{
+  "username": "foo",
+  "password": "bar"
+}
