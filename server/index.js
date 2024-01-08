@@ -10,6 +10,7 @@ require('express-async-errors');
 app.set('views', path.join(__dirname, './src/views'));
 app.set('view engine', 'ejs');
 
+// For testing
 app.use((req, res, next) => {
   console.log(req.path, req.body);
   next();

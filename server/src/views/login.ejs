@@ -84,6 +84,10 @@
       document.querySelector('#submit-btn').toggleAttribute('disabled');
     };
 
+    const saveToken = (token) => {
+      localStorage.setItem('token', token);
+    };
+
     document
       .querySelector('#login-form')
       .addEventListener('submit', async (e) => {
@@ -92,8 +96,9 @@
         const formData = new FormData(e.target);
         const { username, password } = Object.fromEntries(formData);
         try {
-          await loginUser(username, password);
+          const fetchedToken = await loginUser(username, password);
           setErrorMessage('');
+          saveToken(fetchedToken);
         } catch (e) {
           const errorMessage = e.response.data;
           setErrorMessage(errorMessage);
