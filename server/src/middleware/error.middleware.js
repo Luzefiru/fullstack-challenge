@@ -4,7 +4,7 @@ const errorHandler = (err, _, res, __) => {
   );
 
   if (err.code === 'INVALID_TOKEN_ERR') {
-    return res.status(304).redirect('/account/login');
+    return res.status(304).location('/account/login').end();
   }
 
   res.status(500).send(err.message);

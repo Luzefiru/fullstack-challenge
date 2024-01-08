@@ -3,7 +3,7 @@ const accountController = require('../controllers/account.controller');
 
 router.get('/login', (req, res) => {
   if (req.user) {
-    return res.status(304).redirect('/');
+    return res.status(304).location('/').end();
   }
 
   res.render('login');
@@ -14,7 +14,7 @@ router.post('/login', async (req, res) => {
   try {
     const loggedInUser = await accountController.login(username, password);
     res.cookie('token', `Bearer ${loggedInUser}`);
-    res.status(200).end();
+    res.sendStatus(200);
   } catch (e) {
     const newError = new Error('Invalid username or password');
     newError.code = 'LOGIN_ERR';
