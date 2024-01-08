@@ -68,10 +68,10 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script defer>
     const loginUser = async (username, password) => {
-      const { data } = await axios.post('/account/login', {
-        username,
-        password,
-      });
+      const params = new URLSearchParams();
+      params.append('username', username);
+      params.append('password', password);
+      const { data } = await axios.post('/account/login', params);
 
       return data;
     };
