@@ -7,19 +7,12 @@ const cookieParser = require('cookie-parser');
 const { homeController } = require('./src/controllers');
 
 /* Middleware */
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 require('express-async-errors');
 app.set('views', path.join(__dirname, './src/views'));
 app.set('view engine', 'ejs');
 app.use(cookieParser());
-
-/* TODO - remove after testing */
-app.use((req, res, next) => {
-  console.log(req.path, req.body, req.cookies);
-  next();
-});
 
 /* Routes */
 const { homeRouter, accountRouter } = require('./src/routes');
